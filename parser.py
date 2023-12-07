@@ -42,6 +42,8 @@ class Parser:
             case "(":
                 left = self.__parse_group()
                 self.__advance()
+            case "!":
+                left = self.__parse_fact(token)
             case _:
                 raise ReferenceError(
                     f"Invalid token at {self.__index}: {token.literal()}"
@@ -57,9 +59,6 @@ class Parser:
                     left = self.__parse_str(left, next_token)
                 case ".":
                     left = self.__parse_pkt(left, next_token)
-                case "!":
-                    self.__advance()
-                    left = Factorial(left)
                 case _:
                     raise ReferenceError(
                         f"Invalid token at {self.__index}: {next_token.literal()}"
@@ -110,6 +109,7 @@ class Parser:
     def __parse_str(self, left: Node, current_token: Token):
         self.__advance()
         right = self.parse(current_token.precedence())
+
         match current_token.literal():
             case "+":
                 return Addition(left, right)
@@ -133,20 +133,18 @@ class Parser:
                     f"Invalid token at {self.__index}: {current_token.literal()}"
                 )
 
+    def __parse_fact(self, current_token: Token):
+        self.__advance()
+        right = self.parse(current_token.precedence())
+        return Factorial(right)
+
 
 if __name__ == '__main__':
-    
-    #math = input("Please enter a mathematical formula: ")
-    #lexer = Lexer(math)
+
+    math = input("Please enter a mathematical formula: ")
+    lexer = Lexer(math)
 #
-    #parser = Parser(lexer.get_token_stream())
-
-    tokenstream = [
-        Token("int", "5"),
-        Token("int", "4")
-    ]
-
-    parser = Parser(tokenstream)
+    parser = Parser(lexer.get_token_stream())
     result = parser.parse(1)
 
     print(result.evaluate())

@@ -57,7 +57,7 @@ class Lexer:
                     token_stream.append(Token(')'))
                 case '!':
                     self.__advance()
-                    token_stream.append(Token("!"))
+                    token_stream.append(Token('!'))
                 case '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9':
                     token_stream.append(self.__get_integer())
                 case '+':

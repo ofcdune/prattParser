@@ -3,6 +3,9 @@ class Node:
     def __init__(self):
         return
 
+    def evaluate(self):
+        return
+
 
 class Node1Param(Node):
 
@@ -15,8 +18,8 @@ class Node2Param(Node):
 
     def __init__(self, left, right):
         super().__init__()
-        self.right = left
-        self.left = right
+        self.right = right
+        self.left = left
 
 
 class Integer(Node1Param):
