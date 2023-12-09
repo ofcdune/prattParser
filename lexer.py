@@ -7,9 +7,10 @@ class Token:
     def precedence(self):
         return {
             "int": 1,
-            "-": 2,
-            ".": 3,
-            "!": 3,
+            '-': 2,
+            '.': 3,
+            '!': 3,
+            '^': 4
         }.get(self.__type, 1)
 
     def type(self):
@@ -37,11 +38,6 @@ class Lexer:
         return self.__input[self.__pos]
 
     def get_token_stream(self):
-        # OPENPAR: '('
-        # CLOSEDPAR: ')'
-        # INT: ('+'|'-')? [1-9] [0-9]*
-        # ABS1: '|'   <-- Note: include a counter
-        # FAC: '!'
         absolute_count = 0
         token_stream = []
 
@@ -58,20 +54,23 @@ class Lexer:
                 case '!':
                     self.__advance()
                     token_stream.append(Token('!'))
-                case '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9':
+                case '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9':
                     token_stream.append(self.__get_integer())
                 case '+':
                     self.__advance()
-                    token_stream.append(Token("-", "+"))
-                case "-":
+                    token_stream.append(Token('-', '+'))
+                case '-':
                     self.__advance()
-                    token_stream.append(Token("-", "-"))
+                    token_stream.append(Token('-', '-'))
                 case '*':
                     self.__advance()
-                    token_stream.append(Token(".", "*"))
+                    token_stream.append(Token('.', '*'))
                 case '/':
                     self.__advance()
-                    token_stream.append(Token(".", "/"))
+                    token_stream.append(Token('.', '/'))
+                case '^':
+                    self.__advance()
+                    token_stream.append(Token("power", '^'))
                 case '|':
                     self.__advance()
                     if absolute_count == 0:
@@ -80,10 +79,6 @@ class Lexer:
                     else:
                         absolute_count = 0
                         token_stream.append(Token("abs_end"))
-                case '0':
-                    raise NotImplementedError(
-                        f"Unexpected leading zero at index {self.__pos}"
-                    )
                 case _:
                     raise NotImplementedError(
                         f"Unexpected symbol at index {self.__pos}: {self.__get_current_char()}"
@@ -97,8 +92,10 @@ class Lexer:
 
         # we do this so confidently because the only way to this function is through an integer
         buffer.append(curchar)
-
         self.__advance()
+
+        if curchar == '0':
+            return Token("int", '0')
 
         while self.__get_current_char() and 48 <= ord(self.__get_current_char()) <= 57:
             buffer.append(self.__get_current_char())
