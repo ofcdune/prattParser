@@ -22,7 +22,7 @@ class Node2Param(Node):
         self.left = left
 
 
-class Integer(Node1Param):
+class IntegerNode(Node1Param):
 
     def __init__(self, content):
         super().__init__(content)
@@ -31,7 +31,7 @@ class Integer(Node1Param):
         return int(self.content)
 
 
-class Multiplication(Node2Param):
+class MultiplicationNode(Node2Param):
 
     def __init__(self, left, right):
         super().__init__(left, right)
@@ -40,7 +40,7 @@ class Multiplication(Node2Param):
         return self.left.evaluate() * self.right.evaluate()
 
 
-class Division(Node2Param):
+class DivisionNode(Node2Param):
 
     def __init__(self, left, right):
         super().__init__(left, right)
@@ -49,7 +49,7 @@ class Division(Node2Param):
         return self.left.evaluate() / self.right.evaluate()
 
 
-class Addition(Node2Param):
+class AdditionNode(Node2Param):
 
     def __init__(self, left, right):
         super().__init__(left, right)
@@ -58,7 +58,7 @@ class Addition(Node2Param):
         return self.left.evaluate() + self.right.evaluate()
 
 
-class Subtraction(Node2Param):
+class SubtractionNode(Node2Param):
 
     def __init__(self, left, right):
         super().__init__(left, right)
@@ -67,7 +67,7 @@ class Subtraction(Node2Param):
         return self.left.evaluate() - self.right.evaluate()
 
 
-class Absolute(Node1Param):
+class AbsoluteNode(Node1Param):
 
     def __init__(self, content):
         super().__init__(content)
@@ -76,7 +76,7 @@ class Absolute(Node1Param):
         return abs(self.content.evaluate())
 
 
-class Factorial(Node1Param):
+class FactorialNode(Node1Param):
 
     def __init__(self, content):
         super().__init__(content)
@@ -84,3 +84,12 @@ class Factorial(Node1Param):
     def evaluate(self):
         from math import factorial
         return factorial(self.content.evaluate())
+
+
+class PowerNode(Node2Param):
+
+    def __init__(self, left, right):
+        super().__init__(left, right)
+
+    def evaluate(self):
+        return pow(self.left.evaluate(), self.right.evaluate())

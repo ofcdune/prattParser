@@ -70,7 +70,7 @@ class Lexer:
                     token_stream.append(Token('.', '/'))
                 case '^':
                     self.__advance()
-                    token_stream.append(Token("power", '^'))
+                    token_stream.append(Token('^'))
                 case '|':
                     self.__advance()
                     if absolute_count == 0:

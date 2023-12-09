@@ -59,6 +59,8 @@ class Parser:
                     left = self.__parse_str(left, next_token)
                 case ".":
                     left = self.__parse_pkt(left, next_token)
+                case '^':
+                    left = self.__parse_power(left, next_token)
                 case _:
                     raise ReferenceError(
                         f"Invalid token at {self.__index}: {next_token.literal()}"
@@ -72,7 +74,7 @@ class Parser:
 
     def __parse_int(self, literal: str):
         self.__advance()
-        return Integer(literal)
+        return IntegerNode(literal)
 
     def __parse_absolute(self):
         self.__advance()
@@ -88,7 +90,7 @@ class Parser:
                 f"Expected |, got {next_token.literal()}"
             )
 
-        return Absolute(expression)
+        return AbsoluteNode(expression)
 
     def __parse_group(self):
         self.__advance()
@@ -112,9 +114,9 @@ class Parser:
 
         match current_token.literal():
             case "+":
-                return Addition(left, right)
+                return AdditionNode(left, right)
             case "-":
-                return Subtraction(left, right)
+                return SubtractionNode(left, right)
             case _:
                 raise ReferenceError(
                     f"Invalid token at {self.__index}: {current_token.literal()}"
@@ -125,18 +127,24 @@ class Parser:
         right = self.parse(current_token.precedence())
         match current_token.literal():
             case "*":
-                return Multiplication(left, right)
+                return MultiplicationNode(left, right)
             case "/":
-                return Division(left, right)
+                return DivisionNode(left, right)
             case _:
                 raise ReferenceError(
                     f"Invalid token at {self.__index}: {current_token.literal()}"
                 )
 
+    def __parse_power(self, left: Node, current_token: Token):
+        self.__advance()
+        right = self.parse(current_token.precedence())
+
+        return PowerNode(left, right)
+
     def __parse_fact(self, current_token: Token):
         self.__advance()
         right = self.parse(current_token.precedence())
-        return Factorial(right)
+        return FactorialNode(right)
 
 
 if __name__ == '__main__':
