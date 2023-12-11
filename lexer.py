@@ -51,24 +51,24 @@ class Lexer:
                 case ')':
                     self.__advance()
                     token_stream.append(Token(')'))
-                case '!':
+                case '!' | 'f':
                     self.__advance()
                     token_stream.append(Token('!'))
                 case '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9':
                     token_stream.append(self.__get_integer())
-                case '+':
+                case '+' | 'p':
                     self.__advance()
                     token_stream.append(Token('-', '+'))
-                case '-':
+                case '-' | 'm':
                     self.__advance()
                     token_stream.append(Token('-', '-'))
-                case '*':
+                case '*' | 't':
                     self.__advance()
                     token_stream.append(Token('.', '*'))
-                case '/':
+                case '/' | 'd':
                     self.__advance()
                     token_stream.append(Token('.', '/'))
-                case '^':
+                case '^' | 'e':
                     self.__advance()
                     token_stream.append(Token('^'))
                 case '|':

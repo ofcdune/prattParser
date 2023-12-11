@@ -42,8 +42,6 @@ class Parser:
             case "(":
                 left = self.__parse_group()
                 self.__advance()
-            case "!":
-                left = self.__parse_fact(token)
             case _:
                 raise ReferenceError(
                     f"Invalid token at {self.__index}: {token.literal()}"
@@ -61,6 +59,8 @@ class Parser:
                     left = self.__parse_pkt(left, next_token)
                 case '^':
                     left = self.__parse_power(left, next_token)
+                case "!":
+                    left = self.__parse_factorial(left, next_token)
                 case _:
                     raise ReferenceError(
                         f"Invalid token at {self.__index}: {next_token.literal()}"
@@ -141,10 +141,9 @@ class Parser:
 
         return PowerNode(left, right)
 
-    def __parse_fact(self, current_token: Token):
+    def __parse_factorial(self, left: Node, _: Token):
         self.__advance()
-        right = self.parse(current_token.precedence())
-        return FactorialNode(right)
+        return FactorialNode(left)
 
 
 if __name__ == '__main__':
